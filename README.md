@@ -21,11 +21,6 @@ $ cd transaction-engine
 $ docker-compose up -d
 ```
 
-#### Copy env file
-``` bash
-$ cp .env.example .env
-```
-
 #### Install compose dependency
 ``` bash
 $ docker-compose exec php composer install
@@ -41,10 +36,26 @@ $ docker-compose exec php php artisan migrate
 $ docker-compose exec php php artisan db:seed
 ```
 
+### Tests
 #### Run tests
 ``` bash
 $ docker-compose exec php ./vendor/bin/phpunit
 ```
+#### Run PHPmd
+``` bash
+$ docker-compose exec php vendor/bin/phpmd ./app/ text cleancode,codesize,controversial,design,naming,unusedcode
+```
+
+#### Run PHPcs
+``` bash
+$ docker-compose exec php vendor/bin/phpcs ./
+```
+
+#### Run PHPcs fix
+``` bash
+$ docker-compose exec php vendor/bin/phpcbf ./
+```
+
 
 #### HTTP
 - `GET http://localhost/api/transaction`
