@@ -1,24 +1,63 @@
-# Lumen PHP Framework
+## Transaction Engine
+ 
+#### Technologies used:
+- Lumen Framework 8.0
+- Nginx
+- Docker
+- PHPUnit
+#### Features:
+- Make transactions between users
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+### Installation
+#### Clone repository
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+``` bash
+$ git clone git@github.com:leandronascimento/transaction-engine.git transaction-engine
+$ cd transaction-engine
+```
 
-## Official Documentation
+#### Start Docker containers
+``` bash
+$ docker-compose up -d
+```
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+#### Copy env file
+``` bash
+$ cp .env.example .env
+```
 
-## Contributing
+#### Install compose dependency
+``` bash
+$ docker-compose exec php composer install
+```
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Run migrations
+``` bash
+$ docker-compose exec php php artisan migrate
+```
 
-## Security Vulnerabilities
+#### Run seed
+``` bash
+$ docker-compose exec php php artisan db:seed
+```
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+#### Run tests
+``` bash
+$ docker-compose exec php ./vendor/bin/phpunit
+```
 
-## License
+#### HTTP
+- `GET http://localhost/api/transaction`
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### API
+##### Make transaction
+``` bash
+$ curl --location --request POST 'http://localhost/api/transaction'
+```
+
+Response:
+```json
+{
+    
+}
+```
