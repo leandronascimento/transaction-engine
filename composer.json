@@ -21,7 +21,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Domain\\": "domain/",
-            "Infra\\": "infra/"
+            "Adapters\\": "adapters/"
         }
     },
     "autoload-dev": {

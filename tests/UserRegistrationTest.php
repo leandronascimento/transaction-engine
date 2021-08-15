@@ -6,7 +6,7 @@ use Domain\Entities\User;
 use Domain\Exceptions\InvalidCpfException;
 use Domain\Usecase\UserRegistration;
 use Domain\ValueObjects\Cpf;
-use Infra\Repositories\UserRepository;
+use Adapters\Repositories\UserRepository;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class UserRegistrationTest extends TestCase
@@ -27,5 +27,8 @@ class UserRegistrationTest extends TestCase
         new Cpf('01234567892');
     }
 
-
+    public function shouldReturnExceptionWhenDuplicatedCpf()
+    {
+        // não permitir cadastros com o mesmo cpf
+    }
 }
