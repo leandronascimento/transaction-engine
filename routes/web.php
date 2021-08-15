@@ -16,3 +16,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->post('api/transaction', [
+    'as' => 'transaction', 'uses' => 'CreateTransactionController'
+]);

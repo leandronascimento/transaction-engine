@@ -19,12 +19,12 @@ class Cpf
             throw new InvalidCpfException();
         }
 
-        $this->cpf = $cpf;
+        $this->cpf = $this->clear($cpf);
     }
 
     private function isValid(string $cpf): bool
     {
-        $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+        $cpf = $this->clear($cpf);
 
         if (strlen($cpf) != 11) {
             return false;
@@ -45,6 +45,11 @@ class Cpf
         }
 
         return true;
+    }
+
+    private function clear(string $cpf): string
+    {
+        return preg_replace('/[^0-9]/is', '', $cpf);
     }
 
     public function __toString(): string

@@ -32,6 +32,7 @@ final class UserRepository implements UserRegistrationRepository
                 );
             }
         } catch (InvalidCpfException $e) {
+            throw $e;
         }
     }
 
