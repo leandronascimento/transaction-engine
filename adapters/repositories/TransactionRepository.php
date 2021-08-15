@@ -39,7 +39,6 @@ class TransactionRepository implements TransactionRegistrationRepository
 
             $this->userRepository->updateFunds($payer, -$value);
             $this->userRepository->updateFunds($payee, $value);
-
             DB::commit();
             return new Transaction(
                 $this->userRepository->get($payer),
