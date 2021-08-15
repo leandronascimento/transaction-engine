@@ -51,4 +51,11 @@ final class UserRepository implements UserRegistrationRepository
             $record->funds
         );
     }
+
+    public function updateFunds(Cpf $cpf, int $value): bool
+    {
+        $record = DB::table('users')->where(['cpf' => $cpf])->first();
+        $funds = $record->funds + $value;
+        return DB::table('users')->where(['cpf' => $cpf])->update(['funds' => $funds]);
+    }
 }

@@ -10,6 +10,7 @@ use Domain\Exceptions\InvalidCpfException;
 use Domain\Exceptions\UserNotAuthorizedException;
 use Domain\Repositories\TransactionRegistrationRepository;
 use Domain\ValueObjects\Cpf;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class TransactionRepository implements TransactionRegistrationRepository
@@ -28,32 +29,26 @@ class TransactionRepository implements TransactionRegistrationRepository
      */
     public function save(Cpf $payer, Cpf $payee, int $value): Transaction
     {
-        DB::table('transactions')->insert([
-            'payer' => $payer,
-            'payee' => $payee,
-            'value' => $value,
-        ]);
+        DB::beginTransaction();
+        try {
+            DB::table('transactions')->insert([
+                'payer' => $payer,
+                'payee' => $payee,
+                'value' => $value,
+            ]);
 
-        return new Transaction(
-            $this->userRepository->get($payer),
-            $this->userRepository->get($payee),
-            $value,
-        );
-    }
+            $this->userRepository->updateFunds($payer, -$value);
+            $this->userRepository->updateFunds($payee, $value);
 
-    /**
-     * @throws UserNotAuthorizedException
-     * @throws InsufficientFundsException
-     * @throws InvalidCpfException
-     */
-    public function getByPayer(Cpf $payer): Transaction
-    {
-        $record = DB::table('transactions')->where(['payer' => $payer])->first();
-
-        return new Transaction(
-            $this->userRepository->get($record->payer),
-            $this->userRepository->get($record->payee),
-            $record->value,
-        );
+            DB::commit();
+            return new Transaction(
+                $this->userRepository->get($payer),
+                $this->userRepository->get($payee),
+                $value,
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }
