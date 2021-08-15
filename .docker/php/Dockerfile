@@ -5,6 +5,7 @@ RUN apk add --no-cache $PHPIZE_DEPS \
     && docker-php-ext-enable xdebug
 
 RUN docker-php-ext-install tokenizer
+RUN docker-php-ext-install pdo pdo_mysql bcmath
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
