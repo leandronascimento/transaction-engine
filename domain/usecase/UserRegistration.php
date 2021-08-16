@@ -16,8 +16,14 @@ class UserRegistration
         $this->repository = $repository;
     }
 
-    public function handle(string $name, string $email, string $password, string $cpf, int $type, int $funds): User
-    {
-        return $this->repository->save($name, $email, $password, $cpf, $type, $funds);
+    public function handle(
+        string $name,
+        string $email,
+        string $password,
+        string $registerNumber,
+        int $type,
+        int $funds
+    ): User {
+        return $this->repository->save($name, $email, $password, $registerNumber, $type, $funds);
     }
 }

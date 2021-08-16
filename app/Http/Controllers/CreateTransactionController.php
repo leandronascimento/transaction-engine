@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Adapters\Repositories\TransactionRepository;
+use Adapters\Repositories\UserRepository;
 use Domain\Exceptions\InsufficientFundsException;
+use Domain\Exceptions\InvalidCnpjException;
 use Domain\Exceptions\InvalidCpfException;
 use Domain\Exceptions\UserNotAuthorizedException;
 use Domain\ValueObjects\Cpf;
@@ -16,10 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
 class CreateTransactionController extends Controller
 {
     private TransactionRepository $repository;
+    private UserRepository $userRepository;
 
-    public function __construct(TransactionRepository $repository)
+    public function __construct(TransactionRepository $repository, UserRepository $userRepository)
     {
         $this->repository = $repository;
+        $this->userRepository = $userRepository;
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -32,20 +36,24 @@ class CreateTransactionController extends Controller
             ]);
 
             $fields = $request->all();
+            $payer = $this->userRepository->get($fields['payer']);
+            $payee = $this->userRepository->get($fields['payee']);
             $this->repository->save(
-                new Cpf($fields['payer']),
-                new Cpf($fields['payee']),
+                $payer->getRegisterNumber(),
+                $payee->getRegisterNumber(),
                 $fields['value']
             );
 
             return response()->json(['message' => 'Transaction successful!'], Response::HTTP_CREATED);
         } catch (InsufficientFundsException |
             InvalidCpfException |
+            InvalidCnpjException |
             UserNotAuthorizedException |
             ValidationException $e
         ) {
             return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
+            dump($e);
             return response()->json([
                 'message' => 'Internal server error!',
                 'error' => $e->getMessage(),

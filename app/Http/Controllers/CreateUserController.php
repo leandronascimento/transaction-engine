@@ -33,16 +33,18 @@ class CreateUserController extends Controller
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
                 'password' => 'required',
-                'cpf' => 'required|unique:users',
+                'register_number' => 'required|unique:users',
+                'type' => 'required',
+                'funds' => 'required',
             ]);
             $fields = $request->all();
             $this->repository->save(
                 $fields['name'],
                 $fields['email'],
                 $fields['password'],
-                new Cpf($fields['cpf']),
-                $fields['type'] || User::CUSTOMER,
-                $fields['funds'] || 0
+                $this->repository->getRegisterNumber($fields['type'], $fields['register_number']),
+                $fields['type'],
+                $fields['funds']
             );
 
             return response()->json([

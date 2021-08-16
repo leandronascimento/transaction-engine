@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->string('cpf');
+            $table->string('register_number');
             $table->string('password');
             $table->integer('type');
             $table->integer('funds');

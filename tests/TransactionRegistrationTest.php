@@ -11,6 +11,7 @@ use Domain\Exceptions\InsufficientFundsException;
 use Domain\Exceptions\NotAuthorizedTransactionException;
 use Domain\Exceptions\UserNotAuthorizedException;
 use Domain\Usecase\TransactionRegistration;
+use Domain\ValueObjects\Cnpj;
 use Domain\ValueObjects\Cpf;
 use Adapters\Repositories\TransactionRepository;
 use Laravel\Lumen\Testing\DatabaseTransactions;
@@ -42,7 +43,7 @@ class TransactionRegistrationTest extends TestCase
             'Kelly',
             'kelly@test.com',
             '123456',
-            '91263413013',
+            '11444777000161',
             User::SHOPKEEPER,
             500
         );
@@ -60,15 +61,19 @@ class TransactionRegistrationTest extends TestCase
             $this->authorizationService,
             $this->notifyService
         );
-        $transaction = $transactionRegistration->handle($this->payer->getCpf(), $this->payee->getCpf(), 200);
+        $transaction = $transactionRegistration->handle(
+            $this->payer->getRegisterNumber(),
+            $this->payee->getRegisterNumber(),
+            200
+        );
         $this->assertInstanceOf(Transaction::class, $transaction);
     }
 
     public function testShouldReturnUserNotAuthorizedException(): void
     {
         $this->expectException(UserNotAuthorizedException::class);
-        $payer = new User('Leandro', 'leandro@test.com', '123456', new Cpf('01234567890'), User::SHOPKEEPER, 500);
-        $payee = new User('Kelly', 'kelly@test.com', '123456', new Cpf('91263413013'), User::SHOPKEEPER, 500);
+        $payer = new User('Leandro', 'leandro@test.com', '123456', new Cnpj('11444777000161'), User::SHOPKEEPER, 500);
+        $payee = new User('Kelly', 'kelly@test.com', '123456', new Cnpj('11444777000161'), User::SHOPKEEPER, 500);
         new Transaction($payer, $payee, 100);
     }
 
@@ -77,7 +82,7 @@ class TransactionRegistrationTest extends TestCase
         $this->expectException(InsufficientFundsException::class);
         $payer = $this->userRepository->save('Leandro', 'leandro@test.com', '123456', '30763451096', User::CUSTOMER, 0);
         $repository = new TransactionRepository($this->userRepository);
-        $repository->save($payer->getCpf(), $this->payee->getCpf(), 200);
+        $repository->save($payer->getRegisterNumber(), $this->payee->getRegisterNumber(), 200);
     }
 
     public function testShouldReturnNotAuthorizedTransactionException(): void
@@ -105,10 +110,10 @@ class TransactionRegistrationTest extends TestCase
             $this->notifyService
         );
         $payer = $userRepository->save('Leandro', 'leandro@test.com', '123456', '45185582006', User::CUSTOMER, 100);
-        $payee = $userRepository->save('Kelly', 'kelly@test.com', '123456', '46306922075', User::SHOPKEEPER, 100);
-        $transactionRegistration->handle($payer->getCpf(), $payee->getCpf(), 50);
-        $payerUpdated = $userRepository->get($payer->getCpf());
-        $payeeUpdated = $userRepository->get($payee->getCpf());
+        $payee = $userRepository->save('Kelly', 'kelly@test.com', '123456', '96999641000170', User::SHOPKEEPER, 100);
+        $transactionRegistration->handle($payer->getRegisterNumber(), $payee->getRegisterNumber(), 50);
+        $payerUpdated = $userRepository->get($payer->getRegisterNumber());
+        $payeeUpdated = $userRepository->get($payee->getRegisterNumber());
         $this->assertEquals(50, $payerUpdated->getFunds());
         $this->assertEquals(150, $payeeUpdated->getFunds());
     }
@@ -122,7 +127,11 @@ class TransactionRegistrationTest extends TestCase
             $this->authorizationService,
             $this->notifyService
         );
-        $transaction = $transactionRegistration->handle($this->payer->getCpf(), $this->payee->getCpf(), 200);
+        $transaction = $transactionRegistration->handle(
+            $this->payer->getRegisterNumber(),
+            $this->payee->getRegisterNumber(),
+            200
+        );
         $this->assertTrue($this->notifyService->send(
             $this->payer->getEmail(),
             $this->payee->getEmail(),

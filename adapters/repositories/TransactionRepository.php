@@ -9,6 +9,7 @@ use Domain\Exceptions\InsufficientFundsException;
 use Domain\Exceptions\InvalidCpfException;
 use Domain\Exceptions\UserNotAuthorizedException;
 use Domain\Repositories\TransactionRegistrationRepository;
+use Domain\ValueObjects\Cnpj;
 use Domain\ValueObjects\Cpf;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -25,9 +26,8 @@ class TransactionRepository implements TransactionRegistrationRepository
     /**
      * @throws UserNotAuthorizedException
      * @throws InsufficientFundsException
-     * @throws InvalidCpfException
      */
-    public function save(Cpf $payer, Cpf $payee, int $value): Transaction
+    public function save(Cpf $payer, Cpf|Cnpj $payee, int $value): Transaction
     {
         DB::beginTransaction();
         try {
@@ -48,7 +48,7 @@ class TransactionRepository implements TransactionRegistrationRepository
 
             DB::commit();
             return $transaction;
-        } catch (InsufficientFundsException | InvalidCpfException | UserNotAuthorizedException | Exception $e) {
+        } catch (InsufficientFundsException | UserNotAuthorizedException | Exception $e) {
             DB::rollBack();
             throw $e;
         }

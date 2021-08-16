@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Domain\Entities;
 
+use Domain\ValueObjects\Cnpj;
 use Domain\ValueObjects\Cpf;
 
 final class User
@@ -14,18 +15,24 @@ final class User
     private string $name;
     private string $email;
     private string $password;
-    private Cpf $cpf;
     private int $type;
     private int $funds;
+    private Cnpj|Cpf $registerNumber;
 
-    public function __construct(string $name, string $email, string $password, Cpf $cpf, int $type, int $funds)
-    {
+    public function __construct(
+        string $name,
+        string $email,
+        string $password,
+        Cpf|Cnpj $registerNumber,
+        int $type,
+        int $funds
+    ) {
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
-        $this->cpf = $cpf;
         $this->type = $type;
         $this->funds = $funds;
+        $this->registerNumber = $registerNumber;
     }
 
     public function getName(): string
@@ -61,17 +68,6 @@ final class User
         return $this;
     }
 
-    public function getCpf(): Cpf
-    {
-        return $this->cpf;
-    }
-
-    public function setCpf(Cpf $cpf): User
-    {
-        $this->cpf = $cpf;
-        return $this;
-    }
-
     public function getType(): int
     {
         return $this->type;
@@ -90,5 +86,15 @@ final class User
     public function setFunds(int $funds): void
     {
         $this->funds = $funds;
+    }
+
+    public function getRegisterNumber(): Cpf|Cnpj
+    {
+        return $this->registerNumber;
+    }
+
+    public function setRegisterNumber(Cpf|Cnpj $registerNumber): void
+    {
+        $this->registerNumber = $registerNumber;
     }
 }

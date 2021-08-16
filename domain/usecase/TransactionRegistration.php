@@ -7,6 +7,7 @@ use Domain\Contracts\NotifyTransactionService;
 use Domain\Entities\Transaction;
 use Domain\Exceptions\NotAuthorizedTransactionException;
 use Domain\Repositories\TransactionRegistrationRepository;
+use Domain\ValueObjects\Cnpj;
 use Domain\ValueObjects\Cpf;
 
 class TransactionRegistration
@@ -28,7 +29,7 @@ class TransactionRegistration
     /**
      * @throws NotAuthorizedTransactionException
      */
-    public function handle(Cpf $payer, Cpf $payee, int $value): Transaction
+    public function handle(Cpf $payer, Cpf|Cnpj $payee, int $value): Transaction
     {
         if (!$this->service->isAuthorized()) {
             throw new NotAuthorizedTransactionException();

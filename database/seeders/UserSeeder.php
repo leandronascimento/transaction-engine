@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'name' => Str::random(10),
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('password'),
-            'cpf' => '11591323053',
+            'register_number' => '25350390000150',
             'type' => User::SHOPKEEPER,
             'funds' => '1000'
         ]);
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             'name' => Str::random(10),
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('password'),
-            'cpf' => '91263413013',
+            'register_number' => '91263413013',
             'type' => User::CUSTOMER,
             'funds' => '500'
         ]);
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
             'name' => Str::random(10),
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('password'),
-            'cpf' => '11196955034',
+            'register_number' => '11196955034',
             'type' => User::CUSTOMER,
             'funds' => '500'
         ]);
