@@ -20,3 +20,7 @@ $router->get('/', function () use ($router) {
 $router->post('api/transaction', [
     'as' => 'transaction', 'uses' => 'CreateTransactionController'
 ]);
+
+$router->post('api/user', [
+    'as' => 'user', 'uses' => 'CreateUserController'
+]);

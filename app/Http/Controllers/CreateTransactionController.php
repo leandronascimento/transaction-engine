@@ -10,6 +10,8 @@ use Domain\ValueObjects\Cpf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class CreateTransactionController extends Controller
 {
@@ -23,25 +25,31 @@ class CreateTransactionController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            $this->validate($request, [
+                'payer' => 'required',
+                'payee' => 'required',
+                'value' => 'required'
+            ]);
+
             $fields = $request->all();
-            $transaction = $this->transactionRepository->save(
+            $this->transactionRepository->save(
                 new Cpf($fields['payer']),
                 new Cpf($fields['payee']),
                 $fields['value']
             );
 
-            return response()->json($transaction, Response::HTTP_CREATED);
-        } catch (InsufficientFundsException | InvalidCpfException | UserNotAuthorizedException $e) {
-            return response()->json([
-                'status_code' => 400,
-                'message' => $e->getMessage(),
-            ]);
+            return response()->json(['message' => 'Transaction successful!'], Response::HTTP_CREATED);
+        } catch (InsufficientFundsException |
+            InvalidCpfException |
+            UserNotAuthorizedException |
+            ValidationException $e
+        ) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
             return response()->json([
-                'status_code' => 500,
                 'message' => 'Internal server error!',
-                'error' => $e,
-            ]);
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

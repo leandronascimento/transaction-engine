@@ -26,9 +26,4 @@ class UserRegistrationTest extends TestCase
         $this->expectException(InvalidCpfException::class);
         new Cpf('01234567892');
     }
-
-    public function shouldReturnExceptionWhenDuplicatedCpf()
-    {
-        // não permitir cadastros com o mesmo cpf
-    }
 }

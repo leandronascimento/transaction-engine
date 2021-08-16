@@ -37,15 +37,18 @@ class TransactionRepository implements TransactionRegistrationRepository
                 'value' => $value,
             ]);
 
-            $this->userRepository->updateFunds($payer, -$value);
-            $this->userRepository->updateFunds($payee, $value);
-            DB::commit();
-            return new Transaction(
+            $transaction = new Transaction(
                 $this->userRepository->get($payer),
                 $this->userRepository->get($payee),
                 $value,
             );
-        } catch (Exception $e) {
+
+            $this->userRepository->updateFunds($payer, $value * -1);
+            $this->userRepository->updateFunds($payee, $value);
+
+            DB::commit();
+            return $transaction;
+        } catch (InsufficientFundsException | InvalidCpfException | UserNotAuthorizedException | Exception $e) {
             DB::rollBack();
             throw $e;
         }

@@ -8,6 +8,6 @@ use Domain\ValueObjects\Cpf;
 interface UserRegistrationRepository
 {
     public function save(string $name, string $email, string $password, string $cpf, int $type, int $funds): User;
-    public function get(string $cpf): User;
-    public function updateFunds(Cpf $cpf, int $value): bool;
+    public function get(Cpf $cpf): User;
+    public function updateFunds(Cpf $cpf, int $value): User;
 }
