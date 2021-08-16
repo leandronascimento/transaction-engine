@@ -104,11 +104,13 @@ class TransactionRegistrationTest extends TestCase
             $this->authorizationService,
             $this->notifyService
         );
-        $transaction = $transactionRegistration->handle($this->payer->getCpf(), $this->payee->getCpf(), 200);
-        $payerUpdated = $userRepository->get($this->payer->getCpf());
-        $payeeUpdated = $userRepository->get($this->payee->getCpf());
-        $this->assertEquals($payerUpdated->getFunds(), $this->payer->getFunds() - $transaction->getValue());
-        $this->assertEquals($payeeUpdated->getFunds(), $this->payee->getFunds() + $transaction->getValue());
+        $payer = $userRepository->save('Leandro', 'leandro@test.com', '123456', '45185582006', User::CUSTOMER, 100);
+        $payee = $userRepository->save('Kelly', 'kelly@test.com', '123456', '46306922075', User::SHOPKEEPER, 100);
+        $transactionRegistration->handle($payer->getCpf(), $payee->getCpf(), 50);
+        $payerUpdated = $userRepository->get($payer->getCpf());
+        $payeeUpdated = $userRepository->get($payee->getCpf());
+        $this->assertEquals(50, $payerUpdated->getFunds());
+        $this->assertEquals(150, $payeeUpdated->getFunds());
     }
 
     public function testShouldNotifyWhenTransactionSuccess()
@@ -121,6 +123,10 @@ class TransactionRegistrationTest extends TestCase
             $this->notifyService
         );
         $transaction = $transactionRegistration->handle($this->payer->getCpf(), $this->payee->getCpf(), 200);
-        $this->assertTrue($this->notifyService->send($this->payer->getCpf(), $this->payee->getCpf()));
+        $this->assertTrue($this->notifyService->send(
+            $this->payer->getEmail(),
+            $this->payee->getEmail(),
+            'transaction'
+        ));
     }
 }

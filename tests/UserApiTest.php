@@ -19,7 +19,7 @@ class UserApiTest extends TestCase
             'type' => 1,
             'funds' => 1000
         ])->seeJson([
-            "message" => "Transaction successful!"
+            "message" => "User registration successful!"
         ]);
         $this->assertResponseStatus(Response::HTTP_CREATED);
     }
@@ -59,6 +59,4 @@ class UserApiTest extends TestCase
         ]);
         $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
-
-
 }

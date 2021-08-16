@@ -18,7 +18,8 @@ class UserRegistrationTest extends TestCase
         $repository = new UserRepository();
         $userRegistration = new UserRegistration($repository);
         $register = $userRegistration->handle('Leandro', 'leandro@test.com', '123456', '01234567890', 1, 500);
-        $this->assertTrue($register);
+        $this->assertInstanceOf(User::class, $register);
+        $this->assertEquals('leandro@test.com', $register->getEmail());
     }
 
     public function testShouldReturnExceptionInvalidCpf(): void

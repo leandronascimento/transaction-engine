@@ -6,5 +6,5 @@ namespace Domain\Contracts;
 
 interface NotifyTransactionService
 {
-    public function send($from, $to): bool;
+    public function send(string $from, string $for, string $message): bool;
 }

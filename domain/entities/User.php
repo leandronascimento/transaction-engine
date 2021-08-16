@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Domain\Entities;
 
 use Domain\ValueObjects\Cpf;
-use Illuminate\Support\Facades\Hash;
 
 final class User
 {
@@ -23,7 +22,7 @@ final class User
     {
         $this->name = $name;
         $this->email = $email;
-        $this->password = Hash::make($password);
+        $this->password = $password;
         $this->cpf = $cpf;
         $this->type = $type;
         $this->funds = $funds;

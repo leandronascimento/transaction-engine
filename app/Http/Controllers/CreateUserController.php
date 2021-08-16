@@ -18,12 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
 class CreateUserController extends Controller
 {
 
-    private UserRepository $userRepository;
+    private UserRepository $repository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $repository)
     {
 
-        $this->userRepository = $userRepository;
+        $this->repository = $repository;
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -36,7 +36,7 @@ class CreateUserController extends Controller
                 'cpf' => 'required|unique:users',
             ]);
             $fields = $request->all();
-            $this->userRepository->save(
+            $this->repository->save(
                 $fields['name'],
                 $fields['email'],
                 $fields['password'],

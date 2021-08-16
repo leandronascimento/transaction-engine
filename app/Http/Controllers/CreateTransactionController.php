@@ -15,11 +15,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CreateTransactionController extends Controller
 {
-    private TransactionRepository $transactionRepository;
+    private TransactionRepository $repository;
 
-    public function __construct(TransactionRepository $transactionRepository)
+    public function __construct(TransactionRepository $repository)
     {
-        $this->transactionRepository = $transactionRepository;
+        $this->repository = $repository;
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -32,7 +32,7 @@ class CreateTransactionController extends Controller
             ]);
 
             $fields = $request->all();
-            $this->transactionRepository->save(
+            $this->repository->save(
                 new Cpf($fields['payer']),
                 new Cpf($fields['payee']),
                 $fields['value']

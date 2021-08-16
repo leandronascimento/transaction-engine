@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Adapters\Services;
 
-use Domain\Contracts\AuthorizationTransactionService;
 use Domain\Contracts\NotifyTransactionService;
 use Exception;
 use GuzzleHttp\Client;
@@ -14,7 +13,7 @@ class EmailNotifyService implements NotifyTransactionService
 {
     const URL = 'http://o4d9z.mocklab.io/notify';
 
-    public function send($from, $to): bool
+    public function send(string $from, string $for, string $message): bool
     {
         try {
             $client = new Client();

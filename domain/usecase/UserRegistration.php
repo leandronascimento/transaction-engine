@@ -9,15 +9,15 @@ use Domain\Repositories\UserRegistrationRepository;
 
 class UserRegistration
 {
-    private UserRegistrationRepository $registrationRepository;
+    private UserRegistrationRepository $repository;
 
-    public function __construct(UserRegistrationRepository $registrationRepository)
+    public function __construct(UserRegistrationRepository $repository)
     {
-        $this->registrationRepository = $registrationRepository;
+        $this->repository = $repository;
     }
 
     public function handle(string $name, string $email, string $password, string $cpf, int $type, int $funds): User
     {
-        return $this->registrationRepository->save($name, $email, $password, $cpf, $type, $funds);
+        return $this->repository->save($name, $email, $password, $cpf, $type, $funds);
     }
 }

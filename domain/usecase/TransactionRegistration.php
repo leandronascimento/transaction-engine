@@ -11,16 +11,16 @@ use Domain\ValueObjects\Cpf;
 
 class TransactionRegistration
 {
-    private TransactionRegistrationRepository $transactionRepository;
+    private TransactionRegistrationRepository $repository;
     private AuthorizationTransactionService $service;
     private NotifyTransactionService $notify;
 
     public function __construct(
-        TransactionRegistrationRepository $transactionRepository,
+        TransactionRegistrationRepository $repository,
         AuthorizationTransactionService $service,
         NotifyTransactionService $notify
     ) {
-        $this->transactionRepository = $transactionRepository;
+        $this->repository = $repository;
         $this->service = $service;
         $this->notify = $notify;
     }
@@ -34,9 +34,9 @@ class TransactionRegistration
             throw new NotAuthorizedTransactionException();
         }
 
-        $transaction = $this->transactionRepository->save($payer, $payee, $value);
+        $transaction = $this->repository->save($payer, $payee, $value);
 
-        $this->notify->send($payer, $payee);
+        $this->notify->send($payer, $payee, 'transaction');
 
         return $transaction;
     }
