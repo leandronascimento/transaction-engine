@@ -8,6 +8,10 @@
 #### Features:
 - Make transactions between users
 
+#### Architecture:
+![alt text](./clean-architecture.jpg)
+![alt text](./flow.jpg)
+
 ### Installation
 #### Clone repository
 
@@ -63,12 +67,19 @@ $ docker-compose exec php vendor/bin/phpcbf ./
 #### API
 ##### Make transaction
 ``` bash
-$ curl --location --request POST 'http://localhost/api/transaction'
+$ curl --request POST \
+  --url http://localhost/api/transaction \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"value" : 50,
+	"payer" : "91263413013",
+	"payee" : "11591323053"
+}'
 ```
 
 Response:
 ```json
 {
-    
+  "message": "Transaction successful!"
 }
 ```
