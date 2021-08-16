@@ -38,6 +38,11 @@ class CreateTransactionController extends Controller
             $fields = $request->all();
             $payer = $this->userRepository->get($fields['payer']);
             $payee = $this->userRepository->get($fields['payee']);
+
+            if (is_null($payer) || is_null($payee)) {
+                return response()->json(['message' => 'User not found!'], Response::HTTP_NOT_FOUND);
+            }
+
             $this->repository->save(
                 $payer->getRegisterNumber(),
                 $payee->getRegisterNumber(),
@@ -46,14 +51,11 @@ class CreateTransactionController extends Controller
 
             return response()->json(['message' => 'Transaction successful!'], Response::HTTP_CREATED);
         } catch (InsufficientFundsException |
-            InvalidCpfException |
-            InvalidCnpjException |
             UserNotAuthorizedException |
             ValidationException $e
         ) {
             return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
-            dump($e);
             return response()->json([
                 'message' => 'Internal server error!',
                 'error' => $e->getMessage(),

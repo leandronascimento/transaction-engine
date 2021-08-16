@@ -16,6 +16,6 @@ interface UserRegistrationRepository
         int $type,
         int $funds
     ): User;
-    public function get(Cpf|Cnpj $registerNumber): User;
+    public function get(Cpf|Cnpj $registerNumber): User|null;
     public function updateFunds(Cpf|Cnpj $registerNumber, int $value): User;
 }

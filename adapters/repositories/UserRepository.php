@@ -48,9 +48,13 @@ final class UserRepository implements UserRegistrationRepository
         }
     }
 
-    public function get(Cpf|Cnpj|string $registerNumber): User
+    public function get(Cpf|Cnpj|string $registerNumber): User|null
     {
         $record = DB::table('users')->where(['register_number' => $registerNumber])->first();
+
+        if (is_null($record)) {
+            return null;
+        }
 
         return new User(
             $record->name,
